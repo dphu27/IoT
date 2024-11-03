@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+    <div class="sidebar">
+        <ul>
+            <li id="dashboardTab" class="active"><a href="#" onclick="showPage('dashboard')">Dashboard</a></li>
+            <li id="historyTab"><a href="#" onclick="showPage('history')">History</a></li>
+            <li id="sensorHistoryTab"><a href="#" onclick="showPage('sensorHistory')">Sensor History</a></li> <!-- Tab mới -->
+            <li id="profileTab"><a href="#" onclick="showPage('profile')">Profile</a></li>
+        </ul>
+    </div>
+    
+    <div class="main-content">
+        <!-- Dashboard Page -->
+        <div id="dashboardPage" class="page">
+            <div class="header">
+                <h2>Welcome to Phu smart home!</h2>
+            </div>
+            <div class="stats">
+                <div class="stat-box" id="temperatureBox" data-value="20">
+                    <div class="stat-icon temp-icon">
+                        <i class="fas fa-thermometer-half"></i>
+                    </div>
+                    <div class="stat-content">
+                        <p>Temperature</p>
+                        <h3></h3>
+                    </div>
+                </div>
+                <div class="stat-box" id="humidityBox" data-value="50">
+                    <div class="stat-icon humidity-icon">
+                        <i class="fas fa-tint"></i>
+                    </div>
+                    <div class="stat-content">
+                        <p>Humidity</p>
+                        <h3></h3>
+                    </div>
+                </div>
+                <div class="stat-box" id="lightBox" data-value="240">
+                    <div class="stat-icon light-icon">
+                        <i class="fas fa-sun"></i>
+                    </div>
+                    <div class="stat-content">
+                        <p>Light</p>
+                        <h3></h3>
+                    </div>
+                </div>
+                <!-- <div class="stat-box" id="gasBox" data-value="123">
+                    <div class="stat-icon gas-icon">
+                        <i class="fas fa-wind"></i>
+                    </div>
+                    <div class="stat-content">
+                        <p>Gas</p>
+                        <h3></h3>
+                    </div>
+                </div> -->
+            </div>
+            
+            <div class="chart-container">
+                <div class="chart">
+                    <h3>Environmental Monitoring (Hourly)</h3>
+                    <canvas id="environmentHourlyChart"></canvas>
+                </div>
+                <div class="controls">
+                    <div class="control-box">
+                        <p>Fan</p>
+                        <img id="fanImage" src="fanoff.png" alt="Fan" class="fan-icon">
+                        <label class="switch">
+                            <input type="checkbox" id="fanSwitch" onchange="toggleDevice('fan')">
+                            <span class="slider"></span>
+                        </label>
+                    </div>
+                    <div class="control-box">
+                        <p>AC</p>
+                        <img id="acImage" src="images/acoff.png" alt="AC" class="ac-icon">
+                        <label class="switch">
+                            <input type="checkbox" id="acSwitch" onchange="toggleDevice('ac')">
+                            <span class="slider"></span>
+                        </label>
+                    </div>
+                    <div class="control-box">
+                        <p>Light</p> 
+                        <img id="lightImage" src="images/light-off.png" alt="Light" class="light-icon">
+                        <label class="switch">
+                            <input type="checkbox" id="lightSwitch" onchange="toggleDevice('light')">
+                            <span class="slider"></span>
+                        </label>
+                    </div>
+                </div>
+                
+            </div>
+        </div>
+
+        <!-- History Page -->
+        <div id="historyPage" class="page" style="display:none;">
+            <div class="header">
+                <h2>History Page</h2>
+            </div>
+
+            <!-- Nút để xóa toàn bộ lịch sử -->
+            <!-- <button id="deleteAllButton">Xóa Toàn Bộ Lịch Sử</button> -->
+
+            <!-- Thanh tìm kiếm -->
+            <input type="text" id="searchInput" placeholder="Tìm kiếm..." onkeyup="searchTable()">
+
+            <table id="historyTable">
+                <thead>
+                    <tr>
+                        <th onclick="sortTable(0)">ID <i class="fas fa-sort"></i></th>
+                        <th onclick="sortTable(1)">Device Name <i class="fas fa-sort"></i></th>
+                        <th onclick="sortTable(2)">Status <i class="fas fa-sort"></i></th>
+                        <th onclick="sortTable(3)">Time <i class="fas fa-sort"></i></th>
+                        <!-- <th>Actions</th> -->
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Các hàng sẽ được thêm vào đây bởi JavaScript -->
+                </tbody>
+            </table>
+            
+            <div class="pagination-container">
+                <label for="pageSize">Page size:</label>
+                <select id="pageSize" onchange="updatePageSize(this.value)">
+                    <option value="5">5</option>
+                    <option value="10">10</option>
+                    <option value="20">20</option>
+                    <option value="50">50</option>
+                </select>
+            </div>
+            
+            <div id="pagination">
+                <!-- Các nút phân trang sẽ được thêm vào đây bởi JavaScript -->
+            </div>
+        </div>
+
+        <!-- Sensor History Page -->
+        <div id="sensorHistoryPage" class="page" style="display:none;">
+            <h2>Sensor History</h2>
+            <input type="text" id="sensorSearchInput" placeholder="Tìm kiếm..." oninput="searchSensorHistory()">
+            <!-- <button id="deleteSensorHistoryButton" onclick="deleteAllSensorHistory()">Xóa Toàn Bộ Lịch Sử</button> -->
+            <table id="sensorHistoryTable">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Temperature</th>
+                        <th>Humidity</th>
+                        <th>Light</th>
+                        <th>Time</th>
+                        <!-- <th>Actions</th> -->
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+
+            <div class="pagination-container">
+                <label for="sensorPageSize">Page size:</label>
+                <select id="sensorPageSize" onchange="updateSensorPageSize(this.value)">
+                    <option value="5">5</option>
+                    <option value="10">10</option>
+                    <option value="20">20</option>
+                    <option value="50">50</option>
+                </select>
+            </div>
+            <div id="sensorPagination"></div>
+        </div>        
+
+
+        <!-- Profile Page -->
+        <div id="profilePage" class="page" style="display:none;">
+            <div class="profile-container">
+                <div class="profile-box">
+                    <div class="profile-image">
+                        <img src="images/avt.jpg" alt="Avatar">
+                    </div>
+                    <div class="profile-details">
+                        <h3>Hoàng Đình Phú</h3>
+                        <p>Mã sinh viên: B21DCAT149</p>
+                        <p>Lớp: D21CQAT01-B</p>
+                        <p>Nhóm lớp: 06 </p>
+                        <p>Email: hoangdinhphu2712@gmail.com </p>
+                        <p>Github: <a href="https://github.com/dphu27" target="_blank">github.com/dphu27</a></p>
+                        <p>File PDF: <a href="pdf" target="_blank">pdf</a></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="scripts.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/paho-mqtt/1.0.3/mqttws31.min.js"></script>
+</body>
+</html>

@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>History</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="header">
+        <h2>Device Control History</h2>
+    </div>
+    <div class="history-container">
+        <table id="historyTable">
+            <thead>
+                <tr>
+                    <th>Device</th>
+                    <th>Status</th>
+                    <th>Time</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Lịch sử sẽ được thêm vào đây -->
+            </tbody>
+        </table>
+    </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            function renderHistory() {
+                let history = JSON.parse(localStorage.getItem('history')) || [];
+                const historyTableBody = document.getElementById('historyTable').getElementsByTagName('tbody')[0];
+                historyTableBody.innerHTML = '';
+                history.forEach(item => {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `<td>${item.device}</td><td>${item.state}</td><td>${item.time}</td>`;
+                    historyTableBody.appendChild(row);
+                });
+            }
+            renderHistory();
+        });
+    </script>
+</body>
+</html>
